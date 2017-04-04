@@ -10,7 +10,7 @@ def main():
     # Call the regular test endpoint
     response = api.test(
         'https://play.google.com/store/apps/details?id=com.whatsapp&hl=en',
-        'us',
+        'us', # us for the United States, il for Israel, de for Germany and etc
         devices.ANDROID
     )
     print(response)
@@ -19,7 +19,7 @@ def main():
     response = api.compare_to_preview(
         'https://itunes.apple.com/us/app/whatsapp-messenger/id310633997?mt=8',
         'https://itunes.apple.com/us/app/whatsapp-messenger/id310633997?mt=8',
-        'us',
+        'us', # us for the United States, il for Israel, de for Germany and etc
         devices.IPHONE
     )
     print(response)
