@@ -12,7 +12,7 @@ class AffiliTest(object):
     return self._post(endpoints.LOGIN, {'email' : self.email, 'password' : self.password})
 
   def logout(self):
-    return self._get(self, endpoints.LOGOUT)
+    return self._get(endpoints.LOGOUT)
 
   def app_info(self, url = None, package = None, country = None):
     if url is None and package is None:
@@ -20,14 +20,14 @@ class AffiliTest(object):
     if url is not None and package is not None:
       raise APIException('Only one parameter should be passed', endpoints.APPINFO)
     if url is not None:
-      return self._app_info_fetch(parse.quote(url), 'url')
+      return self._app_info_fetch(url, 'url')
     return self._app_info_fetch(package, 'package', country)
 
   def _app_info_fetch(self, data, type, country = None):
     payload = {type : data}
     if country:
       payload['country'] = country
-    return self._get(self, endpoints.APPINFO, payload)
+    return self._get(endpoints.APPINFO, payload)
 
   def test(self, url, country, device):
     return self._post(endpoints.TEST, {
@@ -45,7 +45,7 @@ class AffiliTest(object):
     })
 
   def _post(self, endpoint, payload):
-    self._last_response = self.requests_session.post(endpoint, data = payload)
+    self._last_response = self.requests_session().post(endpoint, data = payload)
     resData = self._last_response.json()
     if resData['error']:
       raise APIException(resData['error'], endpoint)
@@ -55,7 +55,7 @@ class AffiliTest(object):
     url = endpoint
     if payload is not None:
       url = endpoint + '?' + parse.urlencode(payload)
-    self._last_response = self.requests_session.get(url)
+    self._last_response = self.requests_session().get(url)
     resData = self._last_response.json()
     if resData['error']:
       raise APIException(resData['error'], endpoint)
@@ -64,7 +64,11 @@ class AffiliTest(object):
   def last_response(self):
     return self._last_response
 
-
+  def requests_session(self):
+    if hasattr(self, '_request_session'):
+      return self._request_session
+    self._request_session = requests.Session()
+    return self._request_session
 
 
 class APIException(Exception):
