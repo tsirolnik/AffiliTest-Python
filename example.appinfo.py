@@ -21,6 +21,8 @@ def main():
 
   # Calling the app info with an iTunes app store package
   # This requires specifying the country too.
+  # The country is a two letter string as described by ISO 3166-alpha-2.
+  # e.g - us for the United States, il for Israel, de for Germany and so on
   response = api.app_info(package = '310633997', country = 'us')
   print(response)
 
