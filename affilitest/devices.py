@@ -1,6 +1,6 @@
 ANDROID = 'android'
 IPHONE = 'iphone'
 IPAD = 'ipad'
-DESKTOP = 'desktop
+DESKTOP = 'desktop'
 WIN_PHONE = 'windowsPhone'
 BLACKBERRY = 'blackberry'
