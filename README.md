@@ -6,7 +6,7 @@ AffiliTest API implemented in Python
 
 ### Testing
   * Regular testing, compare to preview - [Example code](example.testing.py)
-  * Concurrent example - [Example code](example.testing.multithreaded.py)
+  * Multithreaded example - [Example code](example.testing.multithreaded.py)
 
 ### App Info
   [Example code](example.appinfo.py)
