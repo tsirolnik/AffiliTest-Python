@@ -1,6 +1,7 @@
 import requests
 from urllib import parse
 from affilitest import endpoints
+import copy
 
 class AffiliTest(object):
   def __init__(self, email, password):
@@ -31,22 +32,31 @@ class AffiliTest(object):
 
   def test(self, url, country, device):
     return self._post(endpoints.TEST, {
-      'url' : parse.quote(url),
+      'url' : url,
       'country' : country,
       'device' : device
     })
 
+  def clone(self):
+    api_clone = copy.deepcopy(self)
+    api_clone._request_session = requests.Session()
+    api_clone._request_session.cookies = self._request_session.cookies
+    return api_clone
+
   def compare_to_preview(self, url, preview_url, country, device):
     return self._post(endpoints.TEST, {
-      'url' : parse.quote(url),
-      'previewURL' : parse.quote(preview_url),
+      'url' : url,
+      'previewURL' : preview_url,
       'country' : country,
       'device' : device
     })
 
   def _post(self, endpoint, payload):
     self._last_response = self.requests_session().post(endpoint, data = payload)
-    resData = self._last_response.json()
+    try:
+      resData = self._last_response.json()
+    except Exception as e:
+      raise APIException('API response error. Status code {} '.format(self._last_response.status_code), endpoint)
     if resData['error']:
       raise APIException(resData['error'], endpoint)
     return resData['data']
