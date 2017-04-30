@@ -51,7 +51,7 @@ class AffiliTest(object):
     })
 
   def _post(self, endpoint, payload):
-    self._last_response = self.requests_session().post(endpoint, data = payload, headers = {'Authorization': self.api_key})
+    self._last_response = self.requests_session().post(endpoint, data = payload, headers = {'Authorization': 'AT-API ' + self.api_key})
     try:
       resData = self._last_response.json()
     except Exception as e:
