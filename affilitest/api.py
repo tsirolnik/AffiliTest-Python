@@ -4,13 +4,12 @@ from affilitest import endpoints
 import copy
 
 class AffiliTest(object):
-  def __init__(self, email, password):
-    self.email = email
-    self.password = password
+  def __init__(self, api_key=None):
+    self.api_key = api_key
 
 
-  def login(self):
-    return self._post(endpoints.LOGIN, {'email' : self.email, 'password' : self.password})
+  def login(self, email, password):
+    return self._post(endpoints.LOGIN, {'email' : email, 'password' : password})
 
   def logout(self):
     return self._get(endpoints.LOGOUT)
@@ -52,7 +51,7 @@ class AffiliTest(object):
     })
 
   def _post(self, endpoint, payload):
-    self._last_response = self.requests_session().post(endpoint, data = payload)
+    self._last_response = self.requests_session().post(endpoint, data = payload, headers = {'Authorization': self.api_key})
     try:
       resData = self._last_response.json()
     except Exception as e:
@@ -65,7 +64,7 @@ class AffiliTest(object):
     url = endpoint
     if payload is not None:
       url = endpoint + '?' + parse.urlencode(payload)
-    self._last_response = self.requests_session().get(url)
+    self._last_response = self.requests_session().get(url, headers = {'Authorization': self.api_key})
     resData = self._last_response.json()
     if resData['error']:
       raise APIException(resData['error'], endpoint)

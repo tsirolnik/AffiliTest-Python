@@ -3,9 +3,9 @@ from affilitest import devices
 
 def main():
     # Create a new instance of the API
-    api = affapi.AffiliTest('example@mail.com',  'password')
+    api = affapi.AffiliTest()
     # Use login the acquire session and relevant permissions
-    api.login()
+    api.login('example@mail.com',  'password')
 
     # Call the regular test endpoint
     response = api.test(

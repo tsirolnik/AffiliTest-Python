@@ -3,9 +3,9 @@ from affilitest import api as affapi
 
 def main():
   # Create a new instance of the API
-  api = affapi.AffiliTest('example@mail.com',  'password')
+  api = affapi.AffiliTest()
   # Use login the acquire session and relevant permissions
-  api.login()
+  api.login('example@mail.com',  'password')
 
   # Using Google Play Store URL
   response = api.app_info(url = 'https://play.google.com/store/apps/details?id=com.whatsapp&hl=en')
