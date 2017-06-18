@@ -10,8 +10,10 @@ NUM_THREADS = 4
 
 def main():
     # Create a new instance of the API
-    api = affapi.AffiliTest()
+    # Pass your API Key if you have one
+    api = affapi.AffiliTest() 
     # Use login the acquire session and relevant permissions
+    # Not needed if the API Key was supplied
     api.login('example@mail.com',  'password')
     print('Logged in')
 
