@@ -9,7 +9,7 @@ def main():
     # Not needed if the API Key was supplied
     api.login('example@mail.com',  'password')
 
-    # Using Google Play Store URL
+    # Receive the amount of calls left
     response = api.calls_left()
     print(response)
 
