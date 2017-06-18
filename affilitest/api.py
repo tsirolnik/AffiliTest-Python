@@ -1,7 +1,10 @@
-import requests
-from urllib import parse
-from affilitest import endpoints
 import copy
+from urllib import parse
+import requests
+from affilitest import endpoints
+
+
+API_RESP_ERROR = 'API response error. Status code {} '
 
 class AffiliTest(object):
   def __init__(self, api_key=None):
@@ -23,8 +26,9 @@ class AffiliTest(object):
       return self._app_info_fetch(url, 'url')
     return self._app_info_fetch(package, 'package', country)
 
-  def _app_info_fetch(self, data, type, country = None):
-    payload = {type : data}
+  def _app_info_fetch(self, data, reqType, country = None):
+    payload = {}
+    payload[reqType] = data
     if country:
       payload['country'] = country
     return self._get(endpoints.APPINFO, payload)
@@ -54,24 +58,28 @@ class AffiliTest(object):
     return api_clone  
 
   def _post(self, endpoint, payload):
-    self._last_response = self.requests_session().post(endpoint, data = payload, headers = self._auth_headers())
+    self._last_response = self.requests_session().post(
+      endpoint, 
+      data = payload, 
+      headers = self._auth_headers()
+    )
     try:
-      resData = self._last_response.json()
+      res_data = self._last_response.json()
     except Exception as e:
-      raise APIException('API response error. Status code {} '.format(self._last_response.status_code), endpoint)
-    if resData['error']:
-      raise APIException(resData['error'], endpoint)
-    return resData['data']
+      raise APIException(API_RESP_ERROR.format(self._last_response.status_code), endpoint)
+    if res_data['error']:
+      raise APIException(res_data['error'], endpoint)
+    return res_data['data']
 
-  def _get(self, endpoint, payload = None):
+  def _get(self, endpoint, payload=None):
     url = endpoint
     if payload is not None:
       url = endpoint + '?' + parse.urlencode(payload)
-    self._last_response = self.requests_session().get(url, headers = self._auth_headers())
-    resData = self._last_response.json()
-    if resData['error']:
-      raise APIException(resData['error'], endpoint)
-    return resData['data']
+    self._last_response = self.requests_session().get(url, headers=self._auth_headers())
+    res_data = self._last_response.json()
+    if res_data['error']:
+      raise APIException(res_data['error'], endpoint)
+    return res_data['data']
 
   def _auth_headers(self):
     if self.api_key:
