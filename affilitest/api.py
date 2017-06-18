@@ -36,12 +36,6 @@ class AffiliTest(object):
       'device' : device
     })
 
-  def clone(self):
-    api_clone = copy.deepcopy(self)
-    api_clone._request_session = requests.Session()
-    api_clone._request_session.cookies = self._request_session.cookies
-    return api_clone
-
   def compare_to_preview(self, url, preview_url, country, device):
     return self._post(endpoints.TEST, {
       'url' : url,
@@ -50,8 +44,17 @@ class AffiliTest(object):
       'device' : device
     })
 
+  def calls_left(self):
+    return self._get(endpoints.CALLS_LEFT)
+
+  def clone(self):
+    api_clone = copy.deepcopy(self)
+    api_clone._request_session = requests.Session()
+    api_clone._request_session.cookies = self._request_session.cookies
+    return api_clone  
+
   def _post(self, endpoint, payload):
-    self._last_response = self.requests_session().post(endpoint, data = payload, headers = {'Authorization': 'AT-API ' + self.api_key})
+    self._last_response = self.requests_session().post(endpoint, data = payload, headers = self._auth_headers())
     try:
       resData = self._last_response.json()
     except Exception as e:
@@ -64,11 +67,16 @@ class AffiliTest(object):
     url = endpoint
     if payload is not None:
       url = endpoint + '?' + parse.urlencode(payload)
-    self._last_response = self.requests_session().get(url, headers = {'Authorization': self.api_key})
+    self._last_response = self.requests_session().get(url, headers = self._auth_headers())
     resData = self._last_response.json()
     if resData['error']:
       raise APIException(resData['error'], endpoint)
     return resData['data']
+
+  def _auth_headers(self):
+    if self.api_key:
+      return {'Authorization': 'AT-API ' + self.api_key}
+    return {}
 
   def last_response(self):
     return self._last_response
