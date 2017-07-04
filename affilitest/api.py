@@ -41,7 +41,7 @@ class AffiliTest(object):
     })
 
   def compare_to_preview(self, url, preview_url, country, device):
-    return self._post(endpoints.TEST, {
+    return self._post(endpoints.COMPARE, {
       'url' : url,
       'previewURL' : preview_url,
       'country' : country,
