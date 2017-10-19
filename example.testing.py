@@ -8,12 +8,14 @@ def main():
     # Use login the acquire session and relevant permissions
     # Not needed if the API Key was supplied
     api.login('example@mail.com',  'password')
+    print('Successfuly logged in, testing')
 
     # Call the regular test endpoint
     response = api.test(
-        'https://play.google.com/store/apps/details?id=com.whatsapp&hl=en',
+        'http://google.com',
         'us', # us for the United States, il for Israel, de for Germany and etc
-        devices.ANDROID
+        devices.ANDROID,
+        True # Placing True would return the raw data with its meta data
     )
     print(response)
 
@@ -22,7 +24,7 @@ def main():
         'https://itunes.apple.com/us/app/whatsapp-messenger/id310633997?mt=8',
         'https://itunes.apple.com/us/app/whatsapp-messenger/id310633997?mt=8',
         'us', # us for the United States, il for Israel, de for Germany and etc
-        devices.IPHONE
+        devices.IPHONE,
     )
     print(response)
 

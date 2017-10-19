@@ -31,25 +31,31 @@ class AffiliTest(object):
     payload[reqType] = data
     if country:
       payload['country'] = country
-    return self._get(endpoints.APPINFO, payload)
+    return self._get(endpoints.APPINFO, payload)['data']
 
-  def test(self, url, country, device):
-    return self._post(endpoints.TEST, {
+  def test(self, url, country, device, meta=False):
+    data = self._post(endpoints.TEST, {
       'url' : url,
       'country' : country,
       'device' : device
     })
+    if meta:
+      return data
+    return data['data']
 
-  def compare_to_preview(self, url, preview_url, country, device):
-    return self._post(endpoints.COMPARE, {
+  def compare_to_preview(self, url, preview_url, country, device, meta=False):
+    data = self._post(endpoints.COMPARE, {
       'url' : url,
       'previewURL' : preview_url,
       'country' : country,
       'device' : device
     })
+    if meta:
+      return data
+    return data['data']
 
   def calls_left(self):
-    return self._get(endpoints.CALLS_LEFT)
+    return self._get(endpoints.CALLS_LEFT)['data']
 
   def clone(self):
     api_clone = copy.deepcopy(self)
@@ -69,7 +75,7 @@ class AffiliTest(object):
       raise APIException(API_RESP_ERROR.format(self._last_response.status_code), endpoint)
     if res_data['error']:
       raise APIException(res_data['error'], endpoint)
-    return res_data['data']
+    return res_data
 
   def _get(self, endpoint, payload=None):
     url = endpoint
@@ -79,7 +85,7 @@ class AffiliTest(object):
     res_data = self._last_response.json()
     if res_data['error']:
       raise APIException(res_data['error'], endpoint)
-    return res_data['data']
+    return res_data
 
   def _auth_headers(self):
     if self.api_key:
